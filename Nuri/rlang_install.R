@@ -1,0 +1,35 @@
+install.packages("rJava")
+install.packages("DBI")
+install.packages("RJDBC")
+library(rJava)
+library(DBI)
+library(RJDBC)
+drv <- JDBC(
+  "oracle.jdbc.driver.OracleDriver",
+  "C:\\oraclexe\\app\\oracle\\product\\11.2.0\\server\\jdbc\\lib\\ojdbc6.jar"
+)
+conn <- dbConnect(drv,
+                  "jdbc:oracle:thin:@localhost:1521:xe",
+                  "rachel",
+                  "7003")
+rst <- dbGetQuery(conn, "SELECT * FROM TAB")
+rst
+
+
+
+rst <- dbGetQuery(conn, "SELECT * FROM TEAM")
+rst
+
+rst <- dbGetQuery(conn, "SELECT * FROM PLAYER")
+rst
+
+rst <- dbGetQuery(conn, "SELECT * FROM STADIUM")
+rst
+
+rst <- dbGetQuery(conn, "SELECT * FROM SCHEDULE")
+rst
+
+
+
+
+
