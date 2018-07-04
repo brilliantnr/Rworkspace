@@ -12,22 +12,8 @@ conn <- dbConnect(drv,
                   "jdbc:oracle:thin:@localhost:1521:xe",
                   "rachel",
                   "7003")
-rst <- dbGetQuery(conn, "SELECT * FROM TAB")
-rst
+dbGetQuery(conn, "SELECT * FROM TAB")
 
-
-
-rst <- dbGetQuery(conn, "SELECT * FROM TEAM")
-rst
-
-rst <- dbGetQuery(conn, "SELECT * FROM PLAYER")
-rst
-
-rst <- dbGetQuery(conn, "SELECT * FROM STADIUM")
-rst
-
-rst <- dbGetQuery(conn, "SELECT * FROM SCHEDULE")
-rst
 
 
 

@@ -32,6 +32,7 @@ cat(" |이름 :", res[1]
     ,"\n |등급 :",res[4]
 )
 
+grade
 class(kang$name)
 class(kang$sum)
 class(kang$mean)

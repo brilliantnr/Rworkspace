@@ -1,0 +1,83 @@
+# SQL30 바차트 : 구단승리순으로 순위매기기
+
+query = "SELECT A.WINNER,
+COUNT(A.WINNER) WIN_COUNT
+FROM(SELECT
+K.SCHE_DATE 경기날짜,
+CASE
+WHEN K.HOME_SCORE > K.AWAY_SCORE THEN HT.TEAM_NAME
+WHEN K.AWAY_SCORE > K.HOME_SCORE THEN AT.TEAM_NAME
+ELSE '무승부'
+END WINNER
+FROM SCHEDULE K
+JOIN TEAM HT
+ON K.HOMETEAM_ID LIKE HT.TEAM_ID
+JOIN TEAM AT
+ON K.AWAYTEAM_ID LIKE AT.TEAM_ID
+WHERE
+K.GUBUN LIKE 'Y'
+AND K.SCHE_DATE LIKE '2012%'
+)A
+WHERE A.WINNER NOT LIKE '무승부'
+GROUP BY A.WINNER
+ORDER BY WIN_COUNT DESC"
+rs <- dbGetQuery(conn, query)
+barplot(rs[,2],names.arg=rs[,1], main = "승리수")
+
+
+
+
+
+##-- 029좌석수를 파이그래프로
+
+query = "SELECT
+ROWNUM NO,
+A.*
+FROM
+(SELECT
+S.STADIUM_NAME STADIUM,
+S.SEAT_COUNT NSEAT
+FROM
+STADIUM S
+ORDER BY S.SEAT_COUNT DESC) A
+ORDER BY NO "
+rs <- dbGetQuery(conn, query)
+pie(rs$NSEAT,rs$STADIUM)
+
+
+
+
+
+##-- 028
+##점수차별로 분류한 경기수. 히스토그램
+query = "SELECT A.*
+  FROM(SELECT
+       K.SCHE_DATE GAMEDATE,
+       HT.TEAM_NAME || ' VS ' || AT.TEAM_NAME GAME,
+       CASE
+       WHEN K.HOME_SCORE >= K.AWAY_SCORE THEN (K.HOME_SCORE - K.AWAY_SCORE)
+       ELSE K.AWAY_SCORE - K.HOME_SCORE
+       END SCOREGAP
+       FROM
+       SCHEDULE K
+       JOIN TEAM HT
+       ON K.HOMETEAM_ID LIKE HT.TEAM_ID
+       JOIN TEAM AT
+       ON K.AWAYTEAM_ID LIKE AT.TEAM_ID
+       WHERE
+       K.SCHE_DATE LIKE '2012%'
+       AND K.GUBUN LIKE 'Y'
+       ORDER BY SCOREGAP DESC) A "
+rs <- dbGetQuery(conn, query)
+hist(rs$SCOREGAP,
+     xlab = "SCOREGAP",
+     ylab = "COUNT",
+     col = "yellow",
+     border = "blue")
+
+
+
+
+
+
+
